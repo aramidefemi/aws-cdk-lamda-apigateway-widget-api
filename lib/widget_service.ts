@@ -25,6 +25,22 @@ export class WidgetService extends Construct {
       restApiName: 'Widget Service',
       description: 'This service serves widgets.',
     });
+    
+    const widget = api.root.addResource("{id}");
+
+    // Add new widget to bucket with: POST /{id}
+    const postWidgetIntegration = new apigateway.LambdaIntegration(handler);
+
+    // Get a specific widget from bucket with: GET /{id}
+    const getWidgetIntegration = new apigateway.LambdaIntegration(handler);
+
+    // Remove a specific widget from the bucket with: DELETE /{id}
+    const deleteWidgetIntegration = new apigateway.LambdaIntegration(handler);
+
+    widget.addMethod("POST", postWidgetIntegration); // POST /{id}
+    widget.addMethod("GET", getWidgetIntegration); // GET /{id}
+    widget.addMethod("DELETE", deleteWidgetIntegration); // DELETE /{id}
+
 
     const getWidgetsIntegration = new apigateway.LambdaIntegration(handler, {
       requestTemplates: { 'application/json': '{ "statusCode": "200" }' },
